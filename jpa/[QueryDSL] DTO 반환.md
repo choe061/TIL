@@ -62,10 +62,10 @@
 ```java
 public void findDTOBySetter() {
 	queryFactory.select(Projections.bean(MemberDTO.class,
-										member.username.as("name"),
-										member.age))
-				.from(member)
-				.fetch();
+				member.username.as("name"),
+				member.age))
+			.from(member)
+			.fetch();
 }
 ```
 
@@ -74,10 +74,10 @@ public void findDTOBySetter() {
 ```java
 public void findDTOByField() {
 	queryFactory.select(Projections.fields(MemberDTO.class,
-										member.username,
-										member.age))
-				.from(member)
-				.fetch();
+					member.username,
+					member.age))
+			.from(member)
+			.fetch();
 }
 ```
 
@@ -87,11 +87,11 @@ public void findDTOByField() {
 ```java
 public void findDTOBySetter() {
 	queryFactory.select(Projections.constructor(MemberDTO.class,
-						// constructor 기반에서는 아래 member.username, .age 의 순서가 동일해야함.
-											member.username,
-											member.age))
-				.from(member)
-				.fetch();
+					// constructor 기반에서는 아래 member.username, .age 의 순서가 동일해야함.
+					member.username,
+					member.age))
+			.from(member)
+			.fetch();
 }
 ```
 
@@ -100,11 +100,11 @@ public void findDTOBySetter() {
 ```java
 public void findDTOBySetter() {
 	queryFactory.select(Projections.fields(MemberDTO.class,
-										member.username,
-										ExpressionUtils.as(JPAExpressions.select(memberSub.age.max())
-											 							 .from(memberSub), "age")))
-				.from(member)
-				.fetch();
+						member.username,
+						ExpressionUtils.as(JPAExpressions.select(memberSub.age.max())
+														 .from(memberSub), "age")))
+			.from(member)
+			.fetch();
 }
 ```
 
@@ -123,8 +123,8 @@ public class MemberDTO {
 ```java
 public void findMemberDTO() {
 	queryFactory.select(new QMemberDTO(member.username))
-				.from(member)
-				.fetch();
+			.from(member)
+			.fetch();
 }
 ```
 #### 장점
