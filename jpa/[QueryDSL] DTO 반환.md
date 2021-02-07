@@ -3,7 +3,7 @@
 
 [2. Projections](#Projections)
 
-[3. @QueryProjection](#@QueryProjection)
+[3. QueryProjection Annotation](#QueryProjection-Annotation)
 
 ## DTO 반환
 * Entity 대신 DTO 를 반환하는 방법이다.
@@ -61,12 +61,11 @@
 
 ```java
 public void findDTOBySetter() {
-	queryFactory
-		.select(Projections.bean(MemberDTO.class,
-			member.username.as("name"),
-			member.age))
-		.from(member)
-		.fetch();
+	queryFactory.select(Projections.bean(MemberDTO.class,
+										member.username.as("name"),
+										member.age))
+				.from(member)
+				.fetch();
 }
 ```
 
@@ -74,12 +73,11 @@ public void findDTOBySetter() {
 * Getter, Setter 가 없어도 된다.
 ```java
 public void findDTOByField() {
-	queryFactory
-		.select(Projections.fields(MemberDTO.class,
-			member.username,
-			member.age))
-		.from(member)
-		.fetch();
+	queryFactory.select(Projections.fields(MemberDTO.class,
+										member.username,
+										member.age))
+				.from(member)
+				.fetch();
 }
 ```
 
@@ -88,13 +86,12 @@ public void findDTOByField() {
 * 이름이 아닌 type 을 보고 들어간다.
 ```java
 public void findDTOBySetter() {
-	queryFactory
-		.select(Projections.constructor(MemberDTO.class,
-// constructor 기반에서는 아래 member.username, .age 의 순서가 동일해야함.
-			member.username,
-			member.age))
-		.from(member)
-		.fetch();
+	queryFactory.select(Projections.constructor(MemberDTO.class,
+						// constructor 기반에서는 아래 member.username, .age 의 순서가 동일해야함.
+											member.username,
+											member.age))
+				.from(member)
+				.fetch();
 }
 ```
 
@@ -102,18 +99,16 @@ public void findDTOBySetter() {
 * select 절에 sub query 를 아래처럼 사용할 수 있다.
 ```java
 public void findDTOBySetter() {
-	queryFactory
-		.select(Projections.fields(MemberDTO.class,
-			member.username,
-			ExpressionUtils.as(JPAExpressions.select(memberSub.age.max())
-																			 .from(memberSub), "age")
-		))
-		.from(member)
-		.fetch();
+	queryFactory.select(Projections.fields(MemberDTO.class,
+										member.username,
+										ExpressionUtils.as(JPAExpressions.select(memberSub.age.max())
+											 							 .from(memberSub), "age")))
+				.from(member)
+				.fetch();
 }
 ```
 
-## @QueryProjection
+## QueryProjection Annotation
 * DTO 생성자에 `@QueryProjection` 을 붙이면 컴파일시 DTO 도 QClass 가 생성되어 해당 QClass 를 직접 사용하는 방법
 ```java
 public class MemberDTO {
@@ -127,10 +122,9 @@ public class MemberDTO {
 ```
 ```java
 public void findMemberDTO() {
-	queryFactory
-		.select(new QMemberDTO(member.username))
-		.from(member)
-		.fetch();
+	queryFactory.select(new QMemberDTO(member.username))
+				.from(member)
+				.fetch();
 }
 ```
 #### 장점
