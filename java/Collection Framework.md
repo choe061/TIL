@@ -12,7 +12,11 @@
   
   * [2-4. TreeMap](#TreeMap)
 
-[4. Concurrent Collection](#Concurrent-Collection)
+[3. Concurrent Collections](#Concurrent-Collections)
+
+  * [3-1. Synchronized Java Collections](#Synchronized-Java-Collections)
+
+  * [3-2. Concurrent Collections](#Concurrent-Collections)
 
 
 ## Collection 상속 구조
@@ -92,8 +96,44 @@
     * map 생성시 제공되는 Comparator 를 사용하여 비교한다.
       * 주의할 점! key 를 hashcode 가 아닌 Comparator 로 비교
 
-## Concurrent Collection
+## [Concurrent Collections](https://docs.oracle.com/javase/tutorial/essential/concurrency/collections.html)
 
+#### Synchronized Java Collections
+* 기존 Collection Framework 의 구현체는 single-thread 환경에서 정상적으로 동작하지만, multi-thread 환경에서 동시성 문제를 가진다. Collection 을 사용할때 동시성 문제를 해결하기 위해 Synchronization wrappers 를 지원한다.
+  ```java
+  List<Integer> syncList = Collections.synchronizedList(new ArrayList<>());
+  ```
+  * Collections 의 synchronizedList 같은 static method 를 이용하여 thread-safety 한 view 를 반환한다.
+
+#### Synchronized Java Collections 의 문제점과 Concurrent Collections
+* 위 예제 속 `List<Integer> syncList = Collections.synchronizedList(new ArrayList<>())` 의 경우는 Collection 전체 단위로 Lock 되기 때문에, 한 번에 한 Thread 만 접근할 수 있다. 그래서 큰 성능 저하가 발생한다. 
+* 하지만 아래에서 설명할 Concurrent Collections 는 데이터를 나누어 segments 단위로 thread-safety 를 보장한다. 그래서 multi-thread 환경에서도 한 Collection 에 여러 Thread 가 접근할 수 있기 때문에 성능이 크게 개선된다.
+
+#### Concurrent Collections
+* `java.util.concurrent` package 에는 Collection Framework 가 몇 가지 추가되어 있다. 크게 세 가지 interface 로 분류된다.
+  1. BlockingQueue
+    * producer-consumer queue 로 사용
+    * support Collection interface
+    * thread-safe
+      * 대부분의 queuing method 는 내부적으로 잠금을 걸거나 다른 방법의 동시성 제어를 통해 원자적으로 수행된다.
+      * `bulk Collection 연산은 원자적으로 동작하지 않는다.`
+        * ex) addAll, containsAll, retainAll and removeAll
+    * 참고
+      * https://www.baeldung.com/java-blocking-queue
+      * https://docs.oracle.com/javase/8/docs/api/java/util/concurrent/BlockingQueue.html
+  2. ConcurrentMap
+    * Map 의 sub-interface
+    * 유용한 atomic operations 지원
+    * ConcurrentHashMap 이 대표적인 구현체
+    * thread-safety 와 atomicity 를 보장
+      * 데이터를 나누어 segments 단위로 thread-safety 를 보장
+    * 참고
+      * https://docs.oracle.com/javase/8/docs/api/java/util/concurrent/ConcurrentHashMap.html
+  3. ConcurrentNavigableMap
+    * ConcurrentMap 의 sub-interface
+    * NavigableMap 작업을 지원하는 ConcurrentMap
+      * NavigableMap 은 SortedMap 을 상속받으니까 정렬을 지원하는 concurrent map 인가?
+    * recursive 하게 navigable sub-map 을 가진다.
 
 
 
