@@ -35,6 +35,7 @@
 
 ## Default Constructor & HibernateProxy
 * Fetch type 을 Lazy 로 지정하면 Hibernate 에서 해당 객체는 HibernateProxy 객체라는 가짜 객체로 생성된다.  
+  ![hibernateProxy](https://github.com/choe061/TIL/blob/main/jpa/images/%E1%84%89%E1%85%B3%E1%84%8F%E1%85%B3%E1%84%85%E1%85%B5%E1%86%AB%E1%84%89%E1%85%A3%E1%86%BA%202021-01-28%20%E1%84%8B%E1%85%A9%E1%84%92%E1%85%AE%2010.28.19.png?raw=true)
 * Example
   * 위의 예제에서 Member 를 조회했을때 Team 객체를 디버깅해보면 **HibernateProxy** 객체로 보여진다. Team 객체를 감싼 가짜 HibernateProxy 객체이다. 정확히 Team 을 상속받아 구현된 Proxy 객체.
     * Hibernate 가 reflection 을 사용하여 Team 을 상속받는 Proxy 객체를 생성한다. 그래서 JPA 에서 Entity 로 사용하는 class 에 final 을 선언하면 안되고, Arguments 가 없는 디폴트 생성자가 필수이다.
