@@ -52,5 +52,37 @@
 	* 물론 Request Header 에서 websocket 으로 업그레이드를 요청하여도 서버에서 무조건 프로토콜 스위칭해야하는 것은 아니다. 선택사항이고 만약 서버에서 스위칭한다면 HTTP status 를 101 Switching protocols 으로 응답해주면 된다.
 
 ## RTMP
+* Real Time Messaging Protocol, 실시간 통신 프로토콜
+  * 비디오, 오디오를 실시간으로 전송할 수 있는 프로토콜
+  * RTMPS 는 TLS/SSL 을 통한 RTMP 연결
+* 디폴트로 1935 port 를 사용
+  * 1935 port 연결 실패시 443(RTMPS), 80(RTMP) 를 사용하여 통신
+* TCP 기반의 RTMP 는 접속을 지속적으로 유지
+* 스트림을 부드럽게(끊김없이) 전달하기 위해 데이터를 여러 Fragment 로 나누어 전달
+  * Video stream fragment
+    * 기본 크기는 128 bytes
+    * 하지만 클라이언트 서버 상황에 따라 유동적으로 결정될 수 있다.
+  * Audio stream fragment
+    * 기본 크기는 64 bytes
 
+#### packet structure
+
+<img src="https://www.globaldots.com/hubfs/Imported_Blog_Media/RTMPPacket.png">
+
+* 패킷에는 header 와 body 가 포함되어 있다.
+
+<img src="https://www.globaldots.com/hubfs/Imported_Blog_Media/rtmp_adobe-1.png">
+
+* Header 는 메시지 크기, 메시지 타입, timestamp 정보가 있다.
+
+* 참고 : https://www.globaldots.com/blog/rtmp-real-time-messaging-protocol-explained-2
+
+#### AWS IVS
+
+* IVS(Iteractive Video Service) 는 AWS 의 라이브 스트림 솔루션이다. 사용자에게 짧은 지연 시간으로 라이브 스트림을 제공하고, Aamzon IVS player SDK 와 Timed metadata API 를 제공해준다.
+  * (Timed metadata API 는 아마도 위에서 정리한 RTMP 패킷 구조 중 header 에 있는 timestamp 를 이용하는게 아닐까?)
+* [Amazon IVS Timed Metadata 를 이용하여 Quiz 만들기](https://aws.amazon.com/ko/blogs/media/part-2-using-amazon-interactive-video-service-timed-metadata-2/)
+  * timed metadata 를 이용하면 정확한 시간에 사용자에게 payload 를 제공해줄 수 있다.
+    *  `Timed metadata` payload 를 삽입하면 늦지도 빠르지도 않게 모든 유저에게 동시에 payload(여기서는 퀴즈 정보) 를 보여줄 수 있다.
+  * example) workshop - https://ivs-streaming.workshop.aws/en/timedmetadata.html
 
