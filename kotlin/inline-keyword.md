@@ -1,15 +1,15 @@
 ## 목차
-[1. Tip : IntelliJ 에서 코틀린 코드 디컴파일](#Tip-:-IntelliJ-에서-코틀린-코드-디컴파일)
+[1. Tip. IntelliJ 에서 코틀린 코드 디컴파일](#Tip.-IntelliJ-에서-코틀린-코드-디컴파일)
 
 [2. inline fun 디컴파일된 코드](#inline-fun-디컴파일된-코드)
 
-  * [2-1. inline fun + lambda parameter](#inline-fun-+-lambda-parameter)
-  * [2-2. no inline fun + lambda 가 아닌 parameter](#no-inline-fun-+-lambda-가-아닌-parameter)
-  * [2-3. no inline fun + lambda param + 정적인 데이터](#no-inline-fun-+-lambda-param-+-정적인-데이터)
+  * [2-1. inline fun & lambda parameter](#inline-fun-&-lambda-parameter)
+  * [2-2. no inline fun & lambda 가 아닌 parameter](#no-inline-fun-&-lambda-가-아닌-parameter)
+  * [2-3. no inline fun & lambda param & 정적인 데이터](#no-inline-fun-&-lambda-param-&-정적인-데이터)
 
 [3. 정리](#정리)
 
-## Tip : IntelliJ 에서 코틀린 코드 디컴파일
+## Tip. IntelliJ 에서 코틀린 코드 디컴파일
 * 코틀린 코드가 어떻게 자바로 변환되는지 보면 inline 함수를 쉽게 이해할 수 있다.
 * 방법
   * IntelliJ 상단 메뉴 > Tools > Kotlin > `Show Kotlin bytecode`
@@ -18,7 +18,7 @@
 
 ## inline fun 디컴파일된 코드
 
-#### inline fun + lambda parameter
+#### inline fun & lambda parameter
 * 첫번째 Kotlin 코드 예시
   * testInlineFun, testNotInlineFun 함수 2개가 있고, test 메서드에서 호출하는 코드.
     * testInlineFun : inline 함수이고, lambda 파라미터를 받는 함수
@@ -70,8 +70,9 @@ public final class InlineExample {
 }
 ```
 
-#### no inline fun + lambda 가 아닌 parameter
-* inline 함수도 아니고, parameter 가 lambda 도 아니다.
+#### no inline fun & lambda 가 아닌 parameter
+* 두번째 Kotlin 코드 예시
+  * inline 함수도 아니고, parameter 가 lambda 도 아니다.
 ```Kotlin
 class InlineExample {
     fun test2(num: Int) {
@@ -105,8 +106,9 @@ inline fun testInlineFun(num: Int) {
 }
 ```
 
-#### no inline fun + lambda param + 정적인 데이터
-* 예제 코드를 작성하다가 발견했는데, inline 이 아닌 함수도 때로는 컴파일러가 코드를 최적화해서 객체를 매번 생성하지 않는 경우도 있다. lambda 로 전달되는 코드가 변수를 사용하지 않고 하드 코딩된 값을 사용하는 경우이다.
+#### no inline fun & lambda param & 정적인 데이터
+* 세번째 Kotlin 코드 예시
+  * lambda 의 body 코드가 하드 코딩된 값을 사용하는 경우 컴파일러가 코드를 최적화하는지 어디선가 생성된 Function 객체를 재사용한다.
 ```Kotlin
 class InlineExample {
     fun test() {
@@ -131,8 +133,8 @@ public final class InlineExample {
 }
 ```
 
-## inline 정리
-* 메모리 절약 + 성능 향상
-  * 런타임에 Function 객체를 생성하지 않아 메모리를 덜 소모한다.
+## 정리
+* parameter 가 functional type 인 경우 inline 키워드를 사용하면 `메모리 절약`과 `성능 향상`을 꾀할 수 있다.
+  * 런타임에 Function 객체를 생성하지 않아 메모리를 절약할 수 있다.
     * 함수의 parameter 가 functional type 인 경우에 inline 함수로 성능 향상을 기대할 수 있지만, parameter 가 다른 타입인 경우는 성능 향상은 굉장히 미미하다.
-  * inline 함수의 코드 자체가 함수를 호출하는 곳으로 삽입되기 때문에 함수 호출 스택이 줄어든다.
+  * inline 함수의 코드 자체가 함수를 호출하는 곳으로 삽입되기 때문에 `method call stack` 이 줄어든다.
